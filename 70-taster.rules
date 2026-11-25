@@ -1,0 +1,4 @@
+# Taster: lets the logged-in user configure keyboards with VIA-compatible firmware.
+# Matches only the VIA configuration interface (HID usage page 0xFF60, usage 0x61), not the typing interfaces.
+# Install/remove: see README.md (one sudo command each)
+SUBSYSTEM=="hidraw", KERNEL=="hidraw*", ACTION!="remove", PROGRAM="/usr/bin/env LC_ALL=C /usr/bin/grep -qaP \x06\x60\xff\x09\x61 /sys%p/device/report_descriptor", TAG+="uaccess"

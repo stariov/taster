@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taster</title>
+<link rel="icon" href="icon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<aside class="sidebar">
+  <div class="brand"><img src="icon.svg" alt=""><div><b>Taster</b><span>keyboard studio</span></div></div>
+  <nav id="tabs" hidden>
+    <button data-tab="keymap" class="active">
+      <svg viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M6 10h1M9.5 10h1M13 10h1M16.5 10h1M6 14h1M9 14h6M17 14h1"/></svg>
+      <span>Keymap</span></button>
+    <button data-tab="lighting">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>
+      <span>Lighting</span></button>
+    <button data-tab="macros">
+      <svg viewBox="0 0 24 24"><path d="M4 6h10M4 12h7M4 18h10"/><path d="M16 10l5 3.5-5 3.5z"/></svg>
+      <span>Macros</span></button>
+    <button data-tab="tester">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16.5 9.5"/></svg>
+      <span>Key tester</span></button>
+    <button data-tab="settings">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M21.5 12h-3M5.5 12h-3M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1M18.7 18.7l-2.1-2.1M7.4 7.4L5.3 5.3"/></svg>
+      <span>Settings</span></button>
+  </nav>
+  <div class="grow"></div>
+  <div class="device-card">
+    <span class="dot"></span>
+    <div class="device-text"><small>Keyboard</small><span id="device-name"></span></div>
+    <select id="device-select" hidden></select>
+  </div>
+</aside>
+
+<main>
+  <header class="page-head" id="page-head" hidden>
+    <h1 id="page-title"></h1>
+    <p id="page-sub"></p>
+  </header>
+
+  <!-- shown while no keyboard is connected -->
+  <section id="view-status" class="view center">
+    <div class="card status-card">
+      <div class="status-art"><img src="icon.svg" alt=""></div>
+      <h1 id="status-title">Looking for your keyboard…</h1>
+      <div id="status-body"><p>Plug in your keyboard. Taster finds it automatically.</p></div>
+    </div>
+  </section>
+
+  <section id="view-keymap" class="view" hidden>
+    <div class="toolbar">
+      <div class="layers" id="layer-buttons"></div>
+      <div class="spacer"></div>
+      <button id="undo" class="ghost" disabled title="Undo the last change (Ctrl+Z)">↶ Undo</button>
+    </div>
+    <div class="board-wrap"><div id="board" class="board"></div></div>
+    <div id="selection-bar" class="selection-bar"></div>
+    <div id="layout-options" class="layout-options" hidden></div>
+    <div class="picker">
+      <div class="picker-head">
+        <div id="picker-cats" class="cats"></div>
+        <input id="picker-search" type="search" placeholder="Search keys…  volume, F13, ctrl" autocomplete="off">
+      </div>
+      <div id="picker-body" class="picker-body"></div>
+    </div>
+  </section>
+
+  <section id="view-lighting" class="view" hidden>
+    <div id="lighting-body" class="lighting"></div>
+  </section>
+
+  <section id="view-macros" class="view" hidden>
+    <div class="narrow">
+      <div class="card intro">
+        <p>A macro types text or presses keys for you. Put a macro on a key in <b>Keymap → Macros</b>.</p>
+        <details class="help"><summary>How to write a macro</summary>
+          <table>
+            <tr><td><code>Hello</code></td><td>types “Hello”</td></tr>
+            <tr><td><code>{KC_ENT}</code></td><td>taps one key (here Enter)</td></tr>
+            <tr><td><code>{KC_LCTL,KC_C}</code></td><td>presses keys together (here Ctrl+C)</td></tr>
+            <tr><td><code>{500}</code></td><td>waits 500 milliseconds</td></tr>
+            <tr><td><code>{+KC_LSFT}</code> … <code>{-KC_LSFT}</code></td><td>holds a key down … releases it</td></tr>
+            <tr><td><code>\{</code></td><td>types a literal {</td></tr>
+          </table>
+          <p class="muted">Typed text uses the US layout and plain ASCII characters only. Key names: hover over any key in the Keymap tab.</p>
+        </details>
+      </div>
+      <div id="macro-list" class="card macro-card"></div>
+      <div class="action-bar">
+        <span id="macro-usage" class="muted"></span>
+        <div class="spacer"></div>
+        <button id="macro-revert" class="ghost">Discard changes</button>
+        <button id="macro-save" class="primary">Save macros to keyboard</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="view-tester" class="view" hidden>
+    <div class="board-wrap"><div id="tester-board" class="board tester"></div></div>
+    <div class="tester-foot">
+      <p id="tester-note" class="muted"></p>
+      <span class="legend-chip down">pressed now</span>
+      <span class="legend-chip done">worked</span>
+      <button id="tester-clear" class="ghost">Clear</button>
+    </div>
+  </section>
+
+  <section id="view-settings" class="view" hidden>
+    <div class="settings" id="settings-body"></div>
+  </section>
+</main>
+
+<div id="toast" class="toast" hidden></div>
+<div id="modal" class="modal" hidden><div class="card modal-card"><div id="modal-body"></div><div class="modal-actions" id="modal-actions"></div></div></div>
+<input type="file" id="file-input" hidden>
+
+<script src="keycodes.js"></script>
+<script src="kle.js"></script>
+<script src="menus.js"></script>
+<script src="via.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

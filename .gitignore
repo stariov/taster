@@ -1,0 +1,44 @@
+# Allowlist: Git ignores everything here except the files listed below, so nothing
+# private (backups, logs, firmware, keys) can be committed by accident.
+# To add a new file to the repo, add a "!" line for it below.
+
+/*
+!/.gitignore
+!/LICENSE
+!/README.md
+!/install.sh
+!/uninstall.sh
+!/70-taster.rules
+!/taster/
+!/tests/
+
+/taster/*
+!/taster/taster.py
+!/taster/definitions/
+!/taster/web/
+
+/taster/definitions/*
+!/taster/definitions/3434_0121.json
+
+/taster/web/*
+!/taster/web/index.html
+!/taster/web/icon.svg
+!/taster/web/*.js
+!/taster/web/*.css
+
+/tests/*
+!/tests/*.py
+
+# Safety net: never commit these, even inside allowed folders.
+__pycache__/
+*.pyc
+*-backup-*.json
+*.bin
+*.hex
+*.uf2
+*.zip
+*.log
+*.png
+.env*
+*.pem
+*.key
